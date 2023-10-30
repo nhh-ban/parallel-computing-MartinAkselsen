@@ -1,4 +1,3 @@
-method_parallel_loop <- function(){
 # Assignment 1:  
 library(tweedie) 
 library(ggplot2)
@@ -27,19 +26,28 @@ df <-
     share_reject = NA) 
 
 
-for(i in 1:nrow(df)){ 
-  df$share_reject[i] <-  
-    MTweedieTests( 
-      N=df$N[i], 
-      M=df$M[i], 
-      sig=.05) 
-} 
+#------REPLACEMENT --------#
+# Adding additional libraries
+library(foreach)
+library(doParallel)
+# Initialize parallel backend
+cl <- makeCluster(detectCores())
+registerDoParallel(cl)
 
+# Replace the for loop (lines 29-35) with this foreach loop
+df$share_reject <- foreach(i=1:nrow(df), .combine=c, .packages='tweedie') %dopar% {
+  MTweedieTests(N=df$N[i], M=df$M[i], sig=.05)
 }
+
+# Stop parallel backend
+stopCluster(cl)
+
+
+
 
 
 ## Assignemnt 4 
-   
+
 # This is one way of solving it - maybe you have a better idea? 
 # First, write a function for simulating data, where the "type" 
 # argument controls the distribution. We also need to ensure 

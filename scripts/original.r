@@ -1,4 +1,3 @@
-method_original <- function(){
 # Assignment 1:  
 library(tweedie) 
 library(ggplot2)
@@ -34,12 +33,12 @@ for(i in 1:nrow(df)){
       M=df$M[i], 
       sig=.05) 
 } 
-}
+
 
 
 
 ## Assignemnt 4 
-   
+
 # This is one way of solving it - maybe you have a better idea? 
 # First, write a function for simulating data, where the "type" 
 # argument controls the distribution. We also need to ensure 
