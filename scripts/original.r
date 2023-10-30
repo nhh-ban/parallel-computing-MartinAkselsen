@@ -1,3 +1,4 @@
+method_original <- function(){
 # Assignment 1:  
 library(tweedie) 
 library(ggplot2)
@@ -33,7 +34,7 @@ for(i in 1:nrow(df)){
       M=df$M[i], 
       sig=.05) 
 } 
-
+}
 
 
 
@@ -130,4 +131,3 @@ df %>%
   geom_line() +
   geom_hline(yintercept = .05) +
   theme_bw() 
-

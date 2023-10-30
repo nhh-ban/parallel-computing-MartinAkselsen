@@ -1,3 +1,4 @@
+method_parallel_loop <- function(){
 # Assignment 1:  
 library(tweedie) 
 library(ggplot2)
@@ -34,7 +35,7 @@ for(i in 1:nrow(df)){
       sig=.05) 
 } 
 
-
+}
 
 
 ## Assignemnt 4 
@@ -130,4 +131,3 @@ df %>%
   geom_line() +
   geom_hline(yintercept = .05) +
   theme_bw() 
-
