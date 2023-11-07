@@ -1,6 +1,13 @@
-# Assignment 1:  
-library(tweedie) 
+#tic("Parallel Function Script")
+
+# Load all libraries at the top
+library(tweedie)
 library(ggplot2)
+library(magrittr)
+library(tidyverse)
+library(foreach)
+library(doParallel)
+
 
 simTweedieTest <-  
   function(N){ 
@@ -12,10 +19,24 @@ simTweedieTest <-
 
 
 # Assignment 2:  
-MTweedieTests <-  
-  function(N,M,sig){ 
-    sum(replicate(M,simTweedieTest(N)) < sig)/M 
-  } 
+MTweedieTests_parallel <- function(N, M, sig) {
+  # Initialize parallel backend
+  cl <- makeCluster(detectCores())
+  registerDoParallel(cl)
+  
+  # Run parallel loop for M simulations
+  p_values <- foreach(i=1:M, .combine=c, .packages='tweedie', .export='simTweedieTest') %dopar% {
+    simTweedieTest(N)
+  }
+  
+  
+  # Stop parallel backend
+  stopCluster(cl)
+  
+  # Calculate and return the share of p-values less than sig
+  return(sum(p_values < sig) / M)
+}
+
 
 
 # Assignment 3:  
@@ -28,17 +49,17 @@ df <-
 
 for(i in 1:nrow(df)){ 
   df$share_reject[i] <-  
-    MTweedieTests( 
+    MTweedieTests_parallel( 
       N=df$N[i], 
       M=df$M[i], 
       sig=.05) 
-} 
+}
 
 
 
 
 ## Assignemnt 4 
-   
+
 # This is one way of solving it - maybe you have a better idea? 
 # First, write a function for simulating data, where the "type" 
 # argument controls the distribution. We also need to ensure 
@@ -131,3 +152,4 @@ df %>%
   geom_hline(yintercept = .05) +
   theme_bw() 
 
+#toc()
